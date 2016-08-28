@@ -75,15 +75,21 @@ class Enigma
   def encrypt(message)
 
     characters = message.chars
-    binding.pry
+    # binding.pry
+    @encrypted_message = []
+    characters.each do |char|
 
-    @rotated_character = char_map.rotate(char_map.index(message) + self.first_offset).first
+      @rotated_character = char_map.rotate(char_map.index(char) + self.first_offset).first
+
+      @encrypted_message << @rotated_character
+
+    end
     # @rotated_character2 = char_map.rotate(char_map.index(original_character) + self.second_offset).first
 
     # message.length.times do |i|
     #   @rotational_amount = [@rotation_1, @rotation_2, @rotation_3, @rotation_4] % i
     # end
-
+    return @encrypted_message
   end
 
 end
@@ -103,4 +109,4 @@ puts today.date_generator
 
 # puts today.rotate_alpha_first[(today.alpha_index.fetch("h"))]
 
-puts today.encrypt("hello there")
+puts today.encrypt("hi")
