@@ -1,5 +1,5 @@
 
-
+require "pry"
 class Enigma
   attr_reader :alpha_index
 
@@ -19,8 +19,8 @@ class Enigma
   end
 
 
-  def offset(range, slice)
-    key.slice(range).to_i + @date_squared.slice(slice).to_i
+  def offset(range, slice_at)
+    key.slice(range).to_i + @date_squared.slice(slice_at).to_i
   end
 
   def first_offset
@@ -58,22 +58,31 @@ class Enigma
   end
 
   def rotate_alpha_second
-    @rotation_2 = char_map.rotate(first_offset)
+    @rotation_2 = char_map.rotate(second_offset)
     return @rotation_2
   end
 
   def rotate_alpha_third
-    @rotation_3 = char_map.rotate(first_offset)
+    @rotation_3 = char_map.rotate(third_offset)
     return @rotation_3
   end
 
   def rotate_alpha_fourth
-    @rotation_4 = char_map.rotate(first_offset)
+    @rotation_4 = char_map.rotate(fourth_offset)
     return @rotation_4
   end
 
   def encrypt(message)
 
+    characters = message.chars
+    binding.pry
+
+    @rotated_character = char_map.rotate(char_map.index(message) + self.first_offset).first
+    # @rotated_character2 = char_map.rotate(char_map.index(original_character) + self.second_offset).first
+
+    # message.length.times do |i|
+    #   @rotational_amount = [@rotation_1, @rotation_2, @rotation_3, @rotation_4] % i
+    # end
 
   end
 
@@ -81,14 +90,17 @@ end
 
 today = Enigma.new
 
-require 'json'
+# require 'json'
 puts today.date_generator
-puts today.first_offset
-puts today.second_offset
-puts today.third_offset
-puts today.fourth_offset
-puts today.rotate_alpha_first.to_json
-puts today.alpha_index
+# puts today.first_offset
+# puts today.second_offset
+# puts today.third_offset
+# puts today.fourth_offset
+# puts today.rotate_alpha_first.to_json
+# puts today.alpha_index
 # puts today.alpha_index.fetch("h")
 
-puts today.rotate_alpha_first[(today.alpha_index.fetch("h"))]
+
+# puts today.rotate_alpha_first[(today.alpha_index.fetch("h"))]
+
+puts today.encrypt("hello there")
