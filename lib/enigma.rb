@@ -1,7 +1,13 @@
 
 require "pry"
-class Enigma
-  attr_reader :alpha_index
+class OffsetGen
+	attr_reader :key, :a, :b, :c, :d, :alpha_index
+	attr_accessor :rotation_place
+
+  def key_generator
+    @key = (0..9).to_a.shuffle
+    @key = @key[0..4].join  #this returns a string
+  end
 
   def date_generator
     require 'date'
@@ -14,9 +20,9 @@ class Enigma
     return @date_squared
   end
 
-  def key
-    "23456"
-  end
+  # def key
+  #   "23456"
+  # end
 
 
   def offset(range, slice_at)
@@ -43,99 +49,40 @@ class Enigma
     @alphabet = %w(a b c d e f g h i j k l m n o p q r s t u v w x y z)
   end
 
-  def alpha_index
-    @alpha_index = {"a" => 0, "b" => 1, "c" => 2, "d" => 3,
-      "e" => 4, "f" => 5, "g" => 6, "h" => 7, "i" => 8,
-      "j" => 9, "k" => 10, "l" => 11, "m" => 12, "n" => 13,
-      "o" => 14, "p" => 15, "q" => 16, "r" => 17, "s" => 18,
-      "t" => 19, "u" => 20, "v" => 21, "w" => 22, "x" => 23,
-      "y" => 24, "z" => 25}
-    end
+  def encrypt(message)
 
-    def rot1
-      @rotation_1 = char_map.rotate(first_offset)
-      return @rotation_1
-    end
+    characters = message.chars
+    # binding.pry
+    @encrypted_message = []
 
-    def rot2
-      @rotation_2 = char_map.rotate(second_offset)
-      return @rotation_2
-    end
-
-    def rot3
-      @rotation_3 = char_map.rotate(third_offset)
-      return @rotation_3
-    end
-
-    def rot4
-      @rotation_4 = char_map.rotate(fourth_offset)
-      return @rotation_4
-    end
-
-    def encrypt(message)
-
-      characters = message.chars
-      # binding.pry
-      @encrypted_message = []
-      # characters.each do |char|
-      #
-      #   @rotated_character = char_map.rotate(char_map.index(char) + self.first_offset).first
-      #
-      #   @encrypted_message << @rotated_character
-      #
-      # end
-
-      offset = self.first_offset
-
-      characters.each do |char|
-
-        if characters.index(char) % 4 == 0
-          offset = self.first_offset
-        elsif characters.index(char) % 4 == 1
-          offset = self.second_offset
-        elsif characters.index(char) % 4 == 2
-          offset = self.third_offset
-        elsif characters.index(char) % 4 == 3
-          offset = self.fourth_offset
-        end
-
-        @rotated_character = char_map.rotate(char_map.index(char) + offset).first
-
-
-
-          @encrypted_message << @rotated_character
-        end
-        #
-        # characters.length.times do |i|
-        #   @rotational_amount = [@rotation_1, @rotation_2, @rotation_3, @rotation_4] % i
-        # end
-
-        return @encrypted_message
+    characters.each_with_index do |char, index|
+      if index % 4 == 0
+        offset = self.first_offset
+      elsif index % 4 == 1
+        offset = self.second_offset
+      elsif index % 4 == 2
+        offset = self.third_offset
+      elsif index % 4 == 3
+        offset = self.fourth_offset
       end
 
-      # def offsetter
-      #
-      #   first_offset if char_map.index(char) % 4 == 0
-      #   second_offset if char_map.index(char) % 4 == 1
-      #
-      #
-      # end
-
+      @rotated_character = char_map.rotate(char_map.index(char) + offset).first
+      @encrypted_message << @rotated_character
     end
+    return @encrypted_message.join
+  end
 
-    today = Enigma.new
+end
 
-    # require 'json'
-    puts today.date_generator
-    puts today.first_offset
-    puts today.second_offset
-    puts today.third_offset
-    puts today.fourth_offset
-    # puts today.rotate_alpha_first.to_json
-    # puts today.alpha_index
-    # puts today.alpha_index.fetch("h")
+today = Offset_Gen.new
 
+# require 'json'
+puts today.date_generator
+# puts today.first_offset
+# puts today.second_offset
+# puts today.third_offset
+# puts today.fourth_offset
+# puts today.rotate_alpha_first.to_json
+# puts today.alpha_index
 
-    # puts today.rot1[(today.alpha_index.fetch("h"))]
-
-    puts today.encrypt("tablet")
+puts today.encrypt("reallylongwordgoeshere")
